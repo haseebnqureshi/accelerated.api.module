@@ -1,4 +1,14 @@
-module.exports = (function() {
+
+/*
+Remember, any use of this must instantiate a new instance, so 
+that requiring this package, multiple times in a project, does not
+lead into scope confusion, and that each instance is truly separate.
+
+This must be used by: 
+var module = new require('accelerated.api.module')();
+*/
+
+module.exports = function() {
 
 	var middleware = require('./middleware');
 
@@ -6,7 +16,7 @@ module.exports = (function() {
 
 	var route = require('./route');
 
-	var module = {
+	return {
 
 		key: 'baseModule',
 
@@ -16,10 +26,36 @@ module.exports = (function() {
 
 		model: new model(),
 
-		route: new route()
+		route: new route(),
 	
+		appendMiddleware: function(appendCallback) {
+			this.middleware.appendCallback = appendCallback;
+		},
+
+		appendRoute: function(appendCallback) {
+			this.route.appendCallback = appendCallback;
+		},
+
+		extendMiddleware: function(extendCallback) {
+			this.middleware.extendCallback = extendCallback;
+		},
+
+		extendModel: function(extendCallback) {
+			this.model.extendCallback = extendCallback;
+		},
+
+		extendRoute: function(extendCallback) {
+			this.route.extendCallback = extendCallback;
+		},
+
+		setKey: function(key) {
+			this.key = key;
+		},
+
+		setName: function(name) {
+			this.name = name;
+		}
+
 	};
 
-	return require('./extend.js')(module);
-
-})();
+};
