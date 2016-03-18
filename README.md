@@ -18,7 +18,7 @@ The goal here is to modularize your project into various aspects. For instance, 
 Now go ahead and start with the following code in ```/module/index.js```. Note the visible accelerated methods that are being called to extend the module's ```middleware```, ```model```, and ```routes```:
 
 ```
-module.exports = (function() {
+module.exports = function() {
 
 	// you can require this or other modules using accelerated.api.module 
 	var module = new require('accelerated.api.module')();
@@ -55,14 +55,14 @@ module.exports = (function() {
 
 	return module;
 
-})();
+};
 ```
 
 Go ahead and use the following code in ```/index.js```, requiring and using your newly created module within your accelerated project:
 
 ```
 var api = require('accelerated.api');
-var module = require('./module');
+var module = new require('./module')();
 
 api.useMiddlewares([ 
 	[module.key, module.middleware]
