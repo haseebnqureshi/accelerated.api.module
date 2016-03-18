@@ -1,7 +1,7 @@
 {
   "name": "accelerated.api.module",
-  "version": "1.0.0",
-  "description": "Module template for accelerated.api.",
+  "version": "1.1.0",
+  "description": "Extensible module for accelerated.api.",
   "main": "index.js",
   "scripts": {
     "test": "npm -v"

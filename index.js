@@ -1,24 +1,25 @@
 module.exports = (function() {
 
-	var moduleKey = 'module';
-	var moduleName = 'Module';
+	var middleware = require('./middleware');
 
-	/* Careful - don't modify below unless you're sure! */
+	var model = require('./model');
 
-	var Module = {
+	var route = require('./route');
 
-		key: moduleKey,
+	var module = {
 
-		name: moduleName,
+		key: 'baseModule',
 
-		middleware: require('./middleware'),
+		name: 'Base Module',
 
-		model: require('./model'),
+		middleware: new middleware(),
 
-		route: require('./route')
+		model: new model(),
+
+		route: new route()
 	
 	};
 
-	return Module;
+	return require('./extend.js')(module);
 
 })();
