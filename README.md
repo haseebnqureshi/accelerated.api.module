@@ -20,57 +20,50 @@ Here's a quick step-by-step:
 3. Go ahead and start with the following code in ```/apiUsers/index.js```. Note the visible accelerated methods that are being called to extend the module's ```middleware```, ```model```, and ```routes```:
 
 ```
+module.exports = (function() {
 
-/* you can require this or other modules using accelerated.api.module */
+	// you can require this or other modules using accelerated.api.module 
+	var apiUsers = require('accelerated.api.module');
 
-var apiUsers = require('accelerated.api.module');
+	// set your module's key for reference by middlwares, models, and routes 
+	apiUsers.setKey('users');
 
-/* set your module's key for reference by middlwares, models, and routes */
+	// set your module's name for logging output 
+	apiUsers.setName('Users Module');
 
-apiUsers.setKey('users');
+	// you can choose to extend your module's model
+	apiUsers.extendModel(function(model, express, app, models) {
 
-/* set your module's name for logging output */
+		// modify model to include user create, retrieve, update, and delete methods
+		return model;
 
-apiUsers.setName('Users Module');
+	});
 
-/* you can choose to extend your module's model */
+	// you can choose to extend your module's middleware 
+	apiUsers.appendMiddleware(function(express, app, models) {
 
-apiUsers.extendModel(function(model, express, app, models) {
+		// modify app to include user authentication middleware 
+		return app;
 
-	/* modify model to include user create, retrieve, update, and delete methods */
+	});
 
-	return model;
+	// you can choose to extend your module's routes
+	apiUsers.appendRoute(function(express, app, models) {
+		
+		// modify app to include user CRUD routes 
+		return app;
 
-});
+	});
 
-/* you can choose to extend your module's middleware */
+	return apiUsers;
 
-apiUsers.appendMiddleware(function(express, app, models) {
-
-	/* modify app to include user authentication middleware */
-
-	return app;
-
-});
-
-/* you can choose to extend your module's routes */
-
-apiUsers.appendRoute(function(express, app, models) {
-	
-	/* modify app to include user CRUD routes */
-
-	return app;
-
-});
-
+})();
 ```
 
 4. Require and use your newly created module within your accelerated project. Go ahead and use the following code in ```/index.js```
 
 ```
-
 var api = require('accelerated.api');
-
 var apiUsers = require('./apiUsers');
 
 api.useMiddlewares([ 
@@ -86,8 +79,7 @@ api.useRoutes([
 ]);
 
 api.run();
-
 ```
 
-5. Viola! You now have a highly-organized, highly-efficient, fully-logging node.js express app, with decoupled data logic that's abstracted just right.
+Viola! You now have a highly-organized, highly-efficient, fully-logging node.js express app, with decoupled data logic that's abstracted just right.
 
