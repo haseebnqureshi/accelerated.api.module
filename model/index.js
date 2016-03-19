@@ -1,5 +1,7 @@
 module.exports = function(settings) {
 
+	var settings = settings || {};
+
 	this.model = {};
 
 	/*
@@ -9,7 +11,7 @@ module.exports = function(settings) {
 	This cleanly decouples application logic from accelerated logic.
 	*/
 
-	this.extendCallback = settings.extendModel || function(model, express, app, models) {
+	this.extendCallback = settings.extendModel || function(model, express, app, models, settings) {
 		return model;
 	};
 
@@ -28,7 +30,7 @@ module.exports = function(settings) {
 		model object for accelerated's use.
 		*/
 
-		model = this.extendCallback(model, express, app, models);
+		model = this.extendCallback(model, express, app, models, settings);
 
 		/* 
 		Sending our resulting model back to accelerated.

@@ -1,5 +1,7 @@
 module.exports = function(settings) {
 
+	var settings = settings || {};
+
 	this.route = {};
 
 	/*
@@ -9,7 +11,7 @@ module.exports = function(settings) {
 	This cleanly decouples application logic from accelerated logic.
 	*/
 
-	this.extendCallback = settings.extendRoute || function(route, express, app, models) {
+	this.extendCallback = settings.extendRoute || function(route, express, app, models, settings) {
 		return route;
 	};
 
@@ -20,7 +22,7 @@ module.exports = function(settings) {
 	callback.)
 	*/
 
-	this.appendCallback = settings.appendRoute || function(express, app, models) {
+	this.appendCallback = settings.appendRoute || function(express, app, models, settings) {
 		return app;		
 	};
 
@@ -39,13 +41,13 @@ module.exports = function(settings) {
 		model object for accelerated's use.
 		*/
 
-		route = this.extendCallback(route, express, app, models);
+		route = this.extendCallback(route, express, app, models, settings);
 
 		/*
 		Then we append any routes that we've specified, via appendCallback.
 		*/
 
-		app = this.appendCallback(express, app, models);
+		app = this.appendCallback(express, app, models, settings);
 
 		/*
 		Returning app for waterfalling.

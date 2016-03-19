@@ -1,5 +1,7 @@
 module.exports = function(settings) {
 
+	var settings = settings || {};
+
 	this.middleware = {};
 
 	/*	
@@ -9,7 +11,7 @@ module.exports = function(settings) {
 	This cleanly decouples application logic from accelerated logic.
 	*/
 
-	this.extendCallback = settings.extendMiddleware || function(middleware, express, app, models) {
+	this.extendCallback = settings.extendMiddleware || function(middleware, express, app, models, settings) {
 		return middleware;
 	};
 
@@ -20,7 +22,7 @@ module.exports = function(settings) {
 	callback.)
 	*/
 
-	this.appendCallback = settings.appendMiddleware || function(express, app, models) {
+	this.appendCallback = settings.appendMiddleware || function(express, app, models, settings) {
 		return app;		
 	};
 
@@ -39,14 +41,14 @@ module.exports = function(settings) {
 		model object for accelerated's use.
 		*/
 
-		middleware = this.extendCallback(middleware, express, app, models);
+		middleware = this.extendCallback(middleware, express, app, models, settings);
 
 		/*
 		Then we append any middlewares that we've specified, via 
 		appendCallback.
 		*/
 
-		app = this.appendCallback(express, app, models);
+		app = this.appendCallback(express, app, models, settings);
 
 		/*
 		Returning app for waterfalling.
