@@ -27,45 +27,42 @@ Now go ahead and start with the following code in ```/module/index.js```. Note t
 ```
 module.exports = (function() {
 
-	// first declaring settings for accelerated's module
-	var settings = {
+	//loading accelerated's module with your appropriate settings
+	var module = new require('accelerated.api.module')({
 
-		// set your module's key for reference by middlwares, models, and routes 
+		//set your module's key for reference by middlwares, models, and routes 
 		key: 'users',
 
-		// set your module's name for logging output 
+		//set your module's name for logging output 
 		name: 'Users Module',
 	
-		// you can choose to extend your module's model
+		//you can choose to extend your module's model
 		extendModel: function(model, express, app, models) {
 
-			// modify model to include user create, retrieve, update, and delete methods
+			//modify model to include user create, retrieve, update, and delete methods
 			return model;
 
 		},
 	
-		// you can choose to extend your module's middleware 
+		//you can choose to extend your module's middleware 
 		appendMiddleware: function(express, app, models) {
 
-			// modify app to include user authentication middleware 
+			//modify app to include user authentication middleware 
 			return app;
 
 		},
 	
-		// you can choose to extend your module's routes
+		//you can choose to extend your module's routes
 		appendRoute: function(express, app, models) {
 			
-			// modify app to include user CRUD routes 
+			//modify app to include user CRUD routes 
 			return app;
 
 		}
 	
-	};
+	});
 
-	// loading accelerated's module with your appropriate settings
-	var module = new require('accelerated.api.module')(settings);
-
-	// and returning for use by accelerated.api
+	//returning for use by accelerated.api
 	return module;
 
 })();

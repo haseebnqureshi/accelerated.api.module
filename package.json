@@ -1,6 +1,6 @@
 {
   "name": "accelerated.api.module",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Extensible module for accelerated.api.",
   "main": "index.js",
   "scripts": {
