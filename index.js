@@ -1,61 +1,94 @@
 
 /*
-Remember, any use of this must instantiate a new instance, so 
-that requiring this package, multiple times in a project, does not
-lead into scope confusion, and that each instance is truly separate.
-
-This must be used by: 
-var module = new require('accelerated.api.module')();
+The goal here is to pass settings into this object, so that when
+the pipes have been fully built, "use" can then fill the JS pipes
+with intantiations.
 */
 
-module.exports = function() {
+module.exports = function(settings) {
 
-	var middleware = require('./middleware');
+	var public = {};
 
-	var model = require('./model');
+	var that = this;
 
-	var route = require('./route');
+	var _ = require('underscore');
 
-	return {
+	/*
+	Absorb the constructed settings in a safe and consistent
+	way, persisting them to this scope.
+	*/
 
-		key: 'baseModule',
-
-		name: 'Base Module',
-
-		middleware: new middleware(),
-
-		model: new model(),
-
-		route: new route(),
+	public.setSettings = function(settings) {
 	
-		appendMiddleware: function(appendCallback) {
-			this.middleware.appendCallback = appendCallback;
-		},
+		//ensure we have some settings into our public scope
+		public.settings = public.settings || {};
 
-		appendRoute: function(appendCallback) {
-			this.route.appendCallback = appendCallback;
-		},
+		/*
+		Then ensuring we "absorb" our settings by extending 
+		public.settings with our overrides.
+		*/
 
-		extendMiddleware: function(extendCallback) {
-			this.middleware.extendCallback = extendCallback;
-		},
+		public.settings = _.extend(public.settings, settings);
 
-		extendModel: function(extendCallback) {
-			this.model.extendCallback = extendCallback;
-		},
-
-		extendRoute: function(extendCallback) {
-			this.route.extendCallback = extendCallback;
-		},
-
-		setKey: function(key) {
-			this.key = key;
-		},
-
-		setName: function(name) {
-			this.name = name;
-		}
+		//whitelist settings at every opportunity
+		that.whitelistSettings();
 
 	};
+
+	/*
+	Call this, only when you want to lock down the object, and 
+	inheritance	is finished. This returns the appropriate objects
+	to use in accelerated.api.
+	*/
+
+	public.use = function() {
+
+		that.whitelistSettings();
+
+		var middleware = require('./middleware');
+
+		var model = require('./model');
+
+		var route = require('./route');
+
+		var module = {
+
+			key: public.settings.key || 'baseModule',
+
+			name: public.settings.name || 'Base Module',
+
+			middleware: new middleware(public.settings),
+
+			model: new model(public.settings),
+
+			route: new route(public.settings)
+
+		};
+
+		return module;
+
+	};
+
+	/*
+	Safely and consistently whitelist scope settings.
+	*/
+
+	this.whitelistSettings = function() {
+		
+		public.settings = _.pick(public.settings || {},
+			'key',
+			'name', 
+			'appendMiddleware', 
+			'appendRoute', 
+			'extendMiddleware', 
+			'extendRoute',
+			'extendModel'
+		);
+
+	};
+
+	public.setSettings(settings);
+
+	return public;
 
 };

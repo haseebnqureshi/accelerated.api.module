@@ -1,17 +1,15 @@
-module.exports = function() {
+module.exports = function(settings) {
 
 	this.route = {};
 
 	/*
 	This callback is meant as a filter to your route, making any changes to 
-	your route and then returning back for use by accelerated. 
-
-	This is the default callback. Having it attached to this module.exports
-	allows for inheritance and providing for overrides, that are decoupled 
-	cleanly between application and accelerated logic.
+	your route and then returning back for use by accelerated. We check for 
+	any extendRoute callback and conditionally use our default callback. 
+	This cleanly decouples application logic from accelerated logic.
 	*/
 
-	this.extendCallback = function(route, express, app, models) {
+	this.extendCallback = settings.extendRoute || function(route, express, app, models) {
 		return route;
 	};
 
@@ -22,7 +20,7 @@ module.exports = function() {
 	callback.)
 	*/
 
-	this.appendCallback = function(express, app, models) {
+	this.appendCallback = settings.appendRoute || function(express, app, models) {
 		return app;		
 	};
 

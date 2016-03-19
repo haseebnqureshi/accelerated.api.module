@@ -1,17 +1,15 @@
-module.exports = function() {
+module.exports = function(settings) {
 
 	this.model = {};
 
 	/*
 	This callback is meant as a filter to your model, making any changes to 
-	your model and then returning back for use by accelerated. 
-
-	This is the default callback. Having it attached to this module.exports
-	allows for inheritance and providing for overrides, that are decoupled 
-	cleanly between application and accelerated logic.
+	your model and then returning back for use by accelerated. We check for 
+	any extendModel callback and conditionally use our default callback. 
+	This cleanly decouples application logic from accelerated logic.
 	*/
 
-	this.extendCallback = function(model, express, app, models) {
+	this.extendCallback = settings.extendModel || function(model, express, app, models) {
 		return model;
 	};
 

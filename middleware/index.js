@@ -1,17 +1,15 @@
-module.exports = function() {
+module.exports = function(settings) {
 
 	this.middleware = {};
 
-	/*
+	/*	
 	This callback is meant as a filter to your middleware, making any changes to 
-	your middleware and then returning back for use by accelerated. 
-
-	This is the default callback. Having it attached to this module.exports
-	allows for inheritance and providing for overrides, that are decoupled 
-	cleanly between application and accelerated logic.
+	your middleware and then returning back for use by accelerated. We check for 
+	any extendMiddleware callback and conditionally use our default callback. 
+	This cleanly decouples application logic from accelerated logic.
 	*/
 
-	this.extendCallback = function(middleware, express, app, models) {
+	this.extendCallback = settings.extendMiddleware || function(middleware, express, app, models) {
 		return middleware;
 	};
 
@@ -22,7 +20,7 @@ module.exports = function() {
 	callback.)
 	*/
 
-	this.appendCallback = function(express, app, models) {
+	this.appendCallback = settings.appendMiddleware || function(express, app, models) {
 		return app;		
 	};
 
