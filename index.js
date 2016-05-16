@@ -30,9 +30,6 @@ module.exports = function(settings) {
 
 		public.settings = _.extend(public.settings, settings);
 
-		//whitelist settings at every opportunity
-		that.whitelistSettings();
-
 	};
 
 	/*
@@ -42,8 +39,6 @@ module.exports = function(settings) {
 	*/
 
 	public.use = function() {
-
-		that.whitelistSettings();
 
 		var middleware = require('./middleware');
 
@@ -66,24 +61,6 @@ module.exports = function(settings) {
 		};
 
 		return module;
-
-	};
-
-	/*
-	Safely and consistently whitelist scope settings.
-	*/
-
-	this.whitelistSettings = function() {
-		
-		public.settings = _.pick(public.settings || {},
-			'key',
-			'name', 
-			'appendMiddleware', 
-			'appendRoute', 
-			'extendMiddleware', 
-			'extendRoute',
-			'extendModel'
-		);
 
 	};
 
